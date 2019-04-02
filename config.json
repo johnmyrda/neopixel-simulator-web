@@ -1,0 +1,5 @@
+{
+    "TEST_KEY": "test value blah",
+    "CELERY_BROKER_URL": "amqp://",
+    "CELERY_RESULT_BACKEND": "rpc://"
+}

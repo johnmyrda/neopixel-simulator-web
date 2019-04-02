@@ -1,20 +1,38 @@
 import os
+import time
 from flask import Flask, render_template, redirect, flash, request, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 from tempfile import gettempdir
+from celery_setup import make_celery
 
-UPLOAD_FOLDER = gettempdir()
 app = Flask(__name__)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+app.config.from_json(os.path.join(current_dir, 'config.json'))
+UPLOAD_FOLDER = gettempdir()
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+celery = make_celery(app)
+
+@celery.task()
+def long_print():
+    for i in range(10):
+        time.sleep(1)
+        print(i)
+    return "Hey look we made it!"
 
 @app.route('/')
 def hello():
     return render_template("index.html")
 
+@app.route('/celery')
+def run_task():
+    long_print.delay()
+    return "Running celery task..."
+
 @app.route('/upload', methods=['GET','POST'])
 def upload_file():
     if request.method == 'POST':
-        local_request = request
+        # local_request = request
         print(request.files)
         if 'file' not in request.files:
             flash("No file part")

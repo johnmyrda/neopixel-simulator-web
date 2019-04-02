@@ -8,6 +8,7 @@ pylint = "*"
 
 [packages]
 Flask = "==1.0.2"
+celery = "*"
 
 [requires]
 python_version = "3.7"
