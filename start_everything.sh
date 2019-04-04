@@ -7,7 +7,7 @@ printf "\nprocess logs can be found in the 'logs' directory\n"
 # start rabbitmq & flask
 rabbitmq-server &> logs/rabbitmq.log &
 printf "rabbitmq-server started\n"
-pipenv run celery worker -A app -l INFO &> logs/celery.log &
+pipenv run celery worker -A app.celery -l INFO &> logs/celery.log &
 printf "celery worker instance started\n"
 
 # set environment variables for flask
